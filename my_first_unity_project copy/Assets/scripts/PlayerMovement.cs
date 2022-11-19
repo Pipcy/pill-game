@@ -27,14 +27,36 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
-            rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+            
+            Jump(); //move to its own function so Jump is more varsitle
+            //rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
         }
     }
 
+
+    void Jump()
+    {
+        rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+    }
+
+    //if touch enemy head, kill enemy
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy Head"))
+        {
+            Destroy(collision.transform.parent.gameObject); 
+            /*kill the enemy using destroy
+            because we don't care about this one enemy
+            using .parent.gameObject so it kills the "Enemy" as its entirety not just the Enemy head
+            */
+            Jump(); //when jump on top of the enemy, it jumps.
+        }
+    }
     
+
     bool IsGrounded()//check if touching ground epi4
     {
-        return Physics.CheckSphere(groundCheck.position, .1f, ground);
+        return Physics.CheckSphere(groundCheck.position, .3f, ground); //11/18 changed from .1f to .3f for milk bottle it worked
         //check if position overlap with "ground",o.1f is the size of feet
     }
     
